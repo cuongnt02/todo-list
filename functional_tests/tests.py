@@ -109,3 +109,21 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn("Buy peacock feathers", page_text)
 
         # Satisfied, they both go back to sleep
+
+    def test_layout_and_styling(self):
+        # Edith goes to the home page
+        self.browser.get(self.live_server_url)
+
+        # Her browser window is set to a very specific size
+        self.browser.set_window_size(1024, 768)
+
+        # She notices the input box is nicely centered
+        inputbox = self.browser.find_element(By.ID, "id_new_item")
+        print(f'DEBUG: inputbox x was: {inputbox.location["x"]}')
+        print(f'DEBUG: inputbox width was: {inputbox.size["width"]}')
+        print(f'DEBUG: window width was: {self.browser.get_window_size()["width"]}')
+        self.assertAlmostEqual(
+            inputbox.location["x"] + inputbox.size["width"] / 2,
+            512,
+            delta=10,
+        )
