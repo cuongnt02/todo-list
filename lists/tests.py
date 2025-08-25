@@ -2,6 +2,7 @@ from django.http import HttpRequest
 from django.test import TestCase
 from lists.views import home_page
 from lists.models import Item, List
+import lxml.html
 
 
 class HomePageTest(TestCase):
@@ -11,8 +12,10 @@ class HomePageTest(TestCase):
 
     def test_renders_input_form(self):
         response = self.client.get("/")
-        self.assertContains(response, '<form method="POST" action="/lists/new">')
-        self.assertContains(response, 'name="item_text"')
+        parsed = lxml.html.fromstring(response.content)
+        [form] = parsed.cssselect("form[method=POST]")
+        self.assertEqual(form.get("action"), "/lists/new")
+        [input] = form.cssselect("input[name=item_text]")
 
 
 class ListViewTest(TestCase):
@@ -24,10 +27,11 @@ class ListViewTest(TestCase):
     def test_renders_input_form(self):
         my_list = List.objects.create()
         response = self.client.get(f"/lists/{my_list.id}/")
-        self.assertContains(
-            response, f'<form method="POST" action="/lists/{my_list.id}/add_item">'
-        )
-        self.assertContains(response, 'name="item_text"')
+        parsed = lxml.html.fromstring(response.content)
+        [form] = parsed.cssselect("form[method=POST]")
+        self.assertEqual(form.get("action"), f"/lists/{my_list.id}/add_item")
+        inputs = form.cssselect("input")
+        self.assertIn("item_text", [input.get("name") for input in inputs])
 
     def test_displays_only_items_for_that_list(self):
         correct_list = List.objects.create()
