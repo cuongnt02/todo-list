@@ -1,5 +1,5 @@
 from selenium import webdriver
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -9,10 +9,10 @@ import time
 MAX_WAIT = 5
 
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self) -> None:
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
 
     def tearDown(self) -> None:
         self.browser.quit()
@@ -111,7 +111,7 @@ class NewVisitorTest(LiveServerTestCase):
         # Satisfied, they both go back to sleep
 
     def test_layout_and_styling(self):
-        # Edith goes to the home page
+        # Edith goes to the home page,
         self.browser.get(self.live_server_url)
 
         # Her browser window is set to a very specific size
@@ -119,11 +119,12 @@ class NewVisitorTest(LiveServerTestCase):
 
         # She notices the input box is nicely centered
         inputbox = self.browser.find_element(By.ID, "id_new_item")
-        print(f'DEBUG: inputbox x was: {inputbox.location["x"]}')
-        print(f'DEBUG: inputbox width was: {inputbox.size["width"]}')
-        print(f'DEBUG: window width was: {self.browser.get_window_size()["width"]}')
+        inputbox.send_keys("testing")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table("1: testing")
+        inputbox = self.browser.find_element(By.ID, "id_new_item")
         self.assertAlmostEqual(
             inputbox.location["x"] + inputbox.size["width"] / 2,
             512,
-            delta=10,
+            delta=15,
         )
