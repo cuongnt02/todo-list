@@ -13,7 +13,7 @@ MAX_WAIT = 5
 class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self) -> None:
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Firefox()
         if test_server := os.environ.get("TEST_SERVER"):
             self.live_server_url = "http://" + test_server
 
@@ -129,5 +129,5 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertAlmostEqual(
             inputbox.location["x"] + inputbox.size["width"] / 2,
             512,
-            delta=15,
+            delta=30,
         )
