@@ -20,8 +20,6 @@ class ItemValidationTest(FunctionalTest):
             )
         )
 
-        return  # TODO: re-enable the rest of this test
-
         # She tries again with some text for the item, which now works
         self.browser.find_element(By.ID, "id_new_item").send_keys("Purchase milk")
         self.browser.find_element(By.ID, "id_new_item").send_keys(Keys.ENTER)
