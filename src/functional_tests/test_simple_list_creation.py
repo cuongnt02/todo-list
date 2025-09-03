@@ -17,7 +17,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn("To-Do", header_text)
 
         # She is invited to enter a to-do item straight away
-        input_box = self.browser.find_element(By.ID, "id_new_item")
+        input_box = self.get_item_input_box()
         self.assertEqual(input_box.get_attribute("placeholder"), "Enter a to-do item")
 
         # She types "Buy peacock feathers" into a text box
@@ -30,7 +30,7 @@ class NewVisitorTest(FunctionalTest):
         self.wait_for_row_in_list_table(row_text="1: Buy peacock feathers")
 
         # There is still a text box inviting her to add another item
-        input_box = self.browser.find_element(By.ID, "id_new_item")
+        input_box = self.get_item_input_box()
         self.assertEqual(input_box.get_attribute("placeholder"), "Enter a to-do item")
 
         # She enters "Use peacock feathers to make a fly"
@@ -47,7 +47,7 @@ class NewVisitorTest(FunctionalTest):
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Edith starts a new to-do list
         self.browser.get(self.live_server_url)
-        input_box = self.browser.find_element(By.ID, "id_new_item")
+        input_box = self.get_item_input_box()
         input_box.send_keys("Buy peacock feathers")
         input_box.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("1: Buy peacock feathers")
@@ -69,7 +69,7 @@ class NewVisitorTest(FunctionalTest):
 
         # Francis start a new list entering a new item. He is less interesting
         # than Edith.
-        input_box = self.browser.find_element(By.ID, "id_new_item")
+        input_box = self.get_item_input_box()
         input_box.send_keys("Buy milk")
         input_box.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("1: Buy milk")
